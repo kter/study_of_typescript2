@@ -1,4 +1,4 @@
-import { Book } from "./book";
+import { Book } from "./book.ts";
 
 class Library {
   books: Book[];
@@ -16,7 +16,7 @@ class Library {
   }
 
   findByAuthor(author: string): Book[] {
-    return this.books.filter((book) => (book.author === author));
+    return this.books.filter(book => (book.author === author));
   }
 }
 

@@ -8,6 +8,9 @@ export class Book {
     this.title = title;
     this.author = author;
     this.price = price;
+    if (!this.assertValidPrice()) {
+      throw new Error("price must be greater than or equal to 0");
+    }
   }
 
   getInfo() {
@@ -16,6 +19,10 @@ export class Book {
 
   getDiscountedPrice(rate: number) {
     return Math.floor(this.price * (1 - rate));
+  }
+
+  private assertValidPrice() {
+    return this.price >= 0 && Number.isInteger(this.price);
   }
 }
 

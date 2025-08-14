@@ -1,14 +1,22 @@
 import { Book } from "./book.ts";
 
 class Library {
-  books: Book[] = [];
+  private books: Book[] = [];
+  private index = new Set<string>();
+
+  private key(title: string, author: string): string {
+    return `${title}|${author}`;
+  }
 
   addBook(book: Book): void {
-    if (this.hasBook(book.title, book.author)) {
+    const k = this.key(book.title, book.author);
+
+    if (this.index.has(k)) {
       console.warn("タイトルと著者が重複しています");
       throw new Error("Duplicate book");
     }
     this.books.push(book);
+    this.index.add(k);
   }
 
   listBooks(): void {
@@ -24,14 +32,24 @@ class Library {
   }
 
   hasBook(title: string, author: string): boolean {
-    return this.books.some( b => b.title === title && b.author === author);
+    return this.index.has(this.key(title, author));
   }
 
   removeBook(title: string, author: string): boolean {
-    if (!this.hasBook(title, author)) {
+    const k = this.key(title, author);
+    if (!this.index.has(k)) return false;
+
+    const idx = this.books.findIndex(
+      (b) => b.title === title && b.author === author
+    );
+
+    if (idx === -1) {
+      // インデックスと配列が何らかの理由で不整合になった場合の保険
+      this.index.delete(k);
       return false;
     }
-    this.books = this.books.filter( b => !(b.title === title && b.author === author))
+    this.books.splice(idx, 1);
+    this.index.delete(k);
     return true;
   }
 }

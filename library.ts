@@ -8,6 +8,10 @@ class Library {
   }
 
   addBook(book: Book): void {
+    if (this.books.some(b => b.title === book.title && b.author === book.author)) {
+      console.warn("タイトルと著者が重複しています");
+      throw new Error("Duplicate book");
+    }
     this.books.push(book);
   }
 
@@ -27,3 +31,9 @@ library.addBook(new Book("走れメロス", "太宰治", 900));
 
 library.listBooks();
 console.log(library.findByAuthor("夏目漱石").length);
+
+try {
+  library.addBook(new Book("坊っちゃん", "夏目漱石", 880));
+} catch (e) {
+  console.log("重複チェックOK")
+}

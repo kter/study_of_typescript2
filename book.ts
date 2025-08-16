@@ -1,3 +1,46 @@
+export interface DiscountPolicy {
+  apply(price: number): number;
+}
+
+class PercentageDiscount implements DiscountPolicy {
+  private rate: number;
+
+  constructor(rate: number) {
+    if (!(rate >= 0 && rate <= 1))
+      throw new Error("rate must be between 0 and 1");
+    this.rate = rate;
+  }
+
+  apply(price: number): number {
+    if (price < 0)
+      throw new Error("price must be greater than or equal to 0");
+    return price * (1 - this.rate);
+  }
+}
+
+class ThresholdDiscount implements DiscountPolicy {
+  private threshold: number;
+  private amountOff: number;
+
+  constructor(threshold: number, amountOff: number) {
+    if (threshold < 0 || amountOff < 0)
+      throw new Error("threshold or amountOff must be greater than 0");
+    if (amountOff > threshold)
+      throw new Error("amountOff must be less than or equal to threshold");
+    this.threshold = threshold;
+    this.amountOff = amountOff;
+  }
+
+  apply(price: number): number {
+    if (price < 0)
+      throw new Error("price must be greater than or equal to 0");
+    if (price < this.threshold) {
+      return price;
+    }
+    return price - this.amountOff;
+  }
+}
+
 export class Book {
 
   title: string;
@@ -11,6 +54,10 @@ export class Book {
     if (!this.assertValidPrice()) {
       throw new Error("price must be greater than or equal to 0");
     }
+  }
+
+  priceWith(policy: DiscountPolicy): number {
+    return Math.floor(policy.apply(this.price));
   }
 
   getInfo() {
@@ -29,3 +76,13 @@ export class Book {
 const book = new Book("坊ちゃん", "夏目漱石", 880);
 console.log(book.getInfo());
 console.log(book.getDiscountedPrice(0.2));
+
+const b1 = new Book("坊っちゃん", "夏目漱石", 880);
+const b2 = new Book("吾輩は猫である", "夏目漱石", 1200);
+const p20 = new PercentageDiscount(0.2);
+const th = new ThresholdDiscount(1000, 200);
+
+console.log(b1.priceWith(p20));
+console.log(b2.priceWith(p20));
+console.log(b1.priceWith(th));
+console.log(b2.priceWith(th));

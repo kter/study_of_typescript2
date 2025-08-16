@@ -2,7 +2,20 @@ export interface DiscountPolicy {
   apply(price: number): number;
 }
 
-class PercentageDiscount implements DiscountPolicy {
+export class CompositeDiscount implements DiscountPolicy {
+  private readonly policies: DiscountPolicy[];
+
+  constructor(policies: DiscountPolicy[]) {
+    this.policies = policies;
+  }
+
+  apply(price: number): number {
+    if (price < 0) 
+      throw new Error("price must be greater than or equal to 0")
+    return this.policies.reduce((p, policy) => policy.apply(p), price);
+  }
+}
+export class PercentageDiscount implements DiscountPolicy {
   private rate: number;
 
   constructor(rate: number) {
@@ -18,7 +31,7 @@ class PercentageDiscount implements DiscountPolicy {
   }
 }
 
-class ThresholdDiscount implements DiscountPolicy {
+export class ThresholdDiscount implements DiscountPolicy {
   private threshold: number;
   private amountOff: number;
 
@@ -86,3 +99,11 @@ console.log(b1.priceWith(p20));
 console.log(b2.priceWith(p20));
 console.log(b1.priceWith(th));
 console.log(b2.priceWith(th));
+
+const combo = new CompositeDiscount([
+  new PercentageDiscount(0.2),
+  new ThresholdDiscount(1000, 200),
+])
+
+console.log(b1.priceWith(combo));
+console.log(b2.priceWith(combo));

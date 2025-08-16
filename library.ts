@@ -1,6 +1,6 @@
 import { Book, DiscountPolicy, PercentageDiscount } from "./book.ts";
 
-class Library {
+export class Library {
   private books: Book[] = [];
   private index = new Set<string>();
 

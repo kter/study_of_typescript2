@@ -1,4 +1,4 @@
-import { Book } from "./book.ts";
+import { Book, DiscountPolicy, PercentageDiscount } from "./book.ts";
 
 class Library {
   private books: Book[] = [];
@@ -52,6 +52,10 @@ class Library {
     this.index.delete(k);
     return true;
   }
+
+  totalWith(policy: DiscountPolicy): number {
+    return this.books.reduce((total, book) => total + Math.floor(book.priceWith(policy)), 0);
+  }
 }
 
 const library = new Library();
@@ -76,3 +80,5 @@ console.log(library.removeBook("坊っちゃん", "夏目漱石"));
 library.listBooks();
 console.log(library.removeBook("坊っちゃん", "夏目漱石"));
 library.addBook(new Book("坊っちゃん", "夏目漱石", 880));
+
+console.log(library.totalWith(new PercentageDiscount(0.2)));

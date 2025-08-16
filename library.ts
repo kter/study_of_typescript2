@@ -56,6 +56,11 @@ export class Library {
   totalWith(policy: DiscountPolicy): number {
     return this.books.reduce((total, book) => total + book.priceWith(policy), 0);
   }
+
+  totalOnTotalWith(policy: DiscountPolicy): number {
+    return policy.apply(this.books.reduce((total, book) => total + book.price, 0));
+  }
+  
 }
 
 const library = new Library();

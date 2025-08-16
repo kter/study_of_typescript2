@@ -16,4 +16,26 @@ describe("Library", () => {
     const library3 = new Library();
     expect(library3.totalWith(new CompositeDiscount([new PercentageDiscount(0.2), new ThresholdDiscount(1000, 200)]))).toBe(0);
   })
+
+  it("should return difference between totalWith and totalOnTotalWith", () => {
+    const library = new Library();
+    library.addBook(new Book("坊っちゃん", "夏目漱石", 880));
+    library.addBook(new Book("吾輩は猫である", "夏目漱石", 1200));
+    expect(
+      library.totalWith(
+        new CompositeDiscount([
+          new PercentageDiscount(0.1),
+          new ThresholdDiscount(1500, 200),
+        ])
+      )
+    ).toBe(1872);
+    expect(
+      library.totalOnTotalWith(
+        new CompositeDiscount([
+          new PercentageDiscount(0.1),
+          new ThresholdDiscount(1500, 200),
+        ])
+      )
+    ).toBe(1672);
+  })
 })

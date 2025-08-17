@@ -1,4 +1,6 @@
 import { Book, DiscountPolicy, PercentageDiscount } from "./book.ts";
+import { promises as fs } from "node:fs";
+import * as path from "node:path";
 
 export class Library {
   private books: Book[] = [];
@@ -59,6 +61,33 @@ export class Library {
 
   totalOnTotalWith(policy: DiscountPolicy): number {
     return policy.apply(this.books.reduce((total, book) => total + book.price, 0));
+  }
+
+  async saveToFile(filename: string): Promise<boolean> {
+    const json = JSON.stringify(this.books);
+    try {
+      await fs.writeFile(filename, json);
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }
+
+  async loadFromFile(filename: string): Promise<boolean> {
+    this.books = [];
+    this.index.clear();
+    try {
+      const json = await fs.readFile(filename, "utf-8");
+      const books = JSON.parse(json);
+      books.map(
+        (book: any) => this.addBook(new Book(book.title, book.author, book.price))
+      );
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
   }
   
 }

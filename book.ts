@@ -85,25 +85,3 @@ export class Book {
     return this.price >= 0 && Number.isInteger(this.price);
   }
 }
-
-const book = new Book("坊ちゃん", "夏目漱石", 880);
-console.log(book.getInfo());
-console.log(book.getDiscountedPrice(0.2));
-
-const b1 = new Book("坊っちゃん", "夏目漱石", 880);
-const b2 = new Book("吾輩は猫である", "夏目漱石", 1200);
-const p20 = new PercentageDiscount(0.2);
-const th = new ThresholdDiscount(1000, 200);
-
-console.log(b1.priceWith(p20));
-console.log(b2.priceWith(p20));
-console.log(b1.priceWith(th));
-console.log(b2.priceWith(th));
-
-const combo = new CompositeDiscount([
-  new PercentageDiscount(0.2),
-  new ThresholdDiscount(1000, 200),
-])
-
-console.log(b1.priceWith(combo));
-console.log(b2.priceWith(combo));

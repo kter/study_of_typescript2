@@ -21,8 +21,8 @@ export class Library {
     this.index.add(k);
   }
 
-  listBooks(): void {
-    this.books.forEach((book) => console.log(book.getInfo()));
+  listBooks(): Book[] {
+    return this.books;
   }
 
   findByAuthor(author: string): Book[] {
@@ -91,28 +91,3 @@ export class Library {
   }
   
 }
-
-const library = new Library();
-library.addBook(new Book("坊っちゃん", "夏目漱石", 880));
-library.addBook(new Book("吾輩は猫である", "夏目漱石", 1200));
-library.addBook(new Book("走れメロス", "太宰治", 900));
-
-library.listBooks();
-console.log(library.findByAuthor("夏目漱石").length);
-
-try {
-  library.addBook(new Book("坊っちゃん", "夏目漱石", 880));
-} catch (e) {
-  console.log("重複チェックOK")
-}
-
-console.log(library.hasBook("坊っちゃん", "夏目漱石"));
-console.log(library.hasBook("坊っちゃん2", "夏目漱石"));
-
-library.listBooks();
-console.log(library.removeBook("坊っちゃん", "夏目漱石"));
-library.listBooks();
-console.log(library.removeBook("坊っちゃん", "夏目漱石"));
-library.addBook(new Book("坊っちゃん", "夏目漱石", 880));
-
-console.log(library.totalWith(new PercentageDiscount(0.2)));

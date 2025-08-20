@@ -3,6 +3,30 @@ import { Book, PercentageDiscount, ThresholdDiscount, CompositeDiscount } from "
 import { describe, expect, it } from "vitest";
 
 describe("Library", () => {
+  it ("should return Error when adding duplicate book", () => {
+    const library = new Library();
+    library.addBook(new Book("坊っちゃん", "夏目漱石", 880));
+    expect(() => library.addBook(new Book("坊っちゃん", "夏目漱石", 880))).toThrow();
+  });
+
+  it("should return the book list", () => {
+    const library = new Library();
+    library.addBook(new Book("坊っちゃん", "夏目漱石", 880));
+    library.addBook(new Book("吾輩は猫である", "夏目漱石", 1200));
+    expect(library.listBooks()).toEqual([
+      {
+        title: "坊っちゃん",
+        author: "夏目漱石",
+        price: 880
+      },
+      {
+        title: "吾輩は猫である",
+        author: "夏目漱石",
+        price: 1200
+      }
+    ]);
+  });
+
   it("should return the total price of the books", () => {
     const library1 = new Library();
     library1.addBook(new Book("坊っちゃん", "夏目漱石", 880));

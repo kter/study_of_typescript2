@@ -1,4 +1,5 @@
-import { Book, DiscountPolicy, PercentageDiscount } from "./book.ts";
+import { Book } from "./book.ts";
+import type { DiscountPolicy } from "./book.ts";
 import { promises as fs } from "node:fs";
 import * as path from "node:path";
 
@@ -21,8 +22,8 @@ export class Library {
     this.index.add(k);
   }
 
-  listBooks(): Book[] {
-    return this.books;
+  listBooks(): readonly Book[] {
+    return [...this.books];
   }
 
   findByAuthor(author: string): Book[] {
